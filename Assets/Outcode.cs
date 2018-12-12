@@ -87,16 +87,6 @@ public class Outcode
 
         return edges;
     }
-
-
-    /*public static bool operator +(outcode out1, outcode out2)
-    {
-        return (out1.down != out2.down
-                || out1.left != out2.left
-                || out1.up != out2.up
-                || out1.right != out2.right);
-    }*/
-
 }
 
 public enum Edge

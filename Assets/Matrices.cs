@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Matrices : MonoBehaviour {
 
+    Matrix4x4 everythingM;
+
     // Use this for initialization
     void Start()
     {
@@ -84,7 +86,7 @@ public class Matrices : MonoBehaviour {
 
         //Allin
 
-        Matrix4x4 everythingM = projectionM* viewingM * TranslationM * scaleM * rotationMatrix;
+        everythingM = projectionM* viewingM * TranslationM * scaleM * rotationMatrix;
         print(allInM);
 
         Vector3[] finalImage =
@@ -99,6 +101,12 @@ public class Matrices : MonoBehaviour {
             Matrix4x4.TRS(Vector3.zero, Quaternion.AngleAxis(angle, Vector3.one.normalized), Vector3.one);
         cube = MatrixTransform(cube, rotationMatrix);
         return cube;
+    }
+
+    public Vector3[] TransformMatrixRotatingV2( Vector3[] cube, float angle, Vector3 axis)
+    {
+        Vector3[] cubeV2 = MatrixTransform(cube, everythingM);
+        return cubeV2;
     }
 
     public Vector3[] TransformMatrixViewing(Vector3[] cube)

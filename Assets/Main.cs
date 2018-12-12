@@ -6,9 +6,12 @@ using UnityEngine;
 public class Main : MonoBehaviour
 {
     Vector3[] cube = new Vector3[8];
-    OutcodeTest transformLines = new OutcodeTest();
+    List<Vector2> listVectorToErase = new List<Vector2>();
+    Rasterisation rast = new Rasterisation();
+    LineClip lineClip = new LineClip();
     Matrices transformMatrix = new Matrices();
     Texture2D myTexture;
+    Vector3 rotAx = new Vector3(0, 0, 0);
     Renderer myRenderer;
     int resX = 1920;
     int resY = 1080;
@@ -35,7 +38,7 @@ public class Main : MonoBehaviour
         cube[5] = new Vector3(-1, 1, -1);
         cube[6] = new Vector3(-1,-1, 1);
         cube[7] = new Vector3(-1, -1,- 1);
-        //cube = transformMatrix.TransformMatrixRotating(cube, 1.0f);
+
         cube = transformMatrix.TransformMatrixViewing(cube);
         cube = transformMatrix.TransformMatrixProjection(cube);
         drawCube(cube);
@@ -72,7 +75,7 @@ public class Main : MonoBehaviour
 
 
 
-        if (transformLines.Line_Clip(ref start2, ref end2))
+        if (lineClip.Line_Clip(ref start2, ref end2))
         {
             start2.x = (int)(((start2.x + 1) / 2) * (resX - 1));
             start2.y = (int)(((start2.y + 1) / 2) * (resY - 1));
@@ -80,14 +83,17 @@ public class Main : MonoBehaviour
             end2.y = (int)(((end2.y + 1) / 2) * (resY - 1));
 
             List<Vector2> vectorsRasterised = new List<Vector2>();
-
-            vectorsRasterised = transformLines.Rasterise(start2, end2);
+            
+            vectorsRasterised = rast.Rasterise(start2, end2);
+            
             foreach (Vector2 v in vectorsRasterised)
             {
                 //print(start2.x.ToString());
                 //print(start2.y.ToString());
                 myTexture.SetPixel((int)v.x, (int)v.y, Color.red);
+                listVectorToErase.Add(v);
             }
+            
         }
     }
 
@@ -96,8 +102,12 @@ public class Main : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        //myTexture.SetPixels32(Color.black);
-        cube = transformMatrix.TransformMatrixRotating(cube, 3.0f);
+        foreach (Vector2 v in listVectorToErase)
+        {
+            myTexture.SetPixel((int)v.x, (int)v.y, Color.white);
+        }
+        listVectorToErase.Clear();
+        cube = transformMatrix.TransformMatrixRotating(cube, 1.0f);
         //cube = transformMatrix.TransformMatrixViewing(cube);
         //cube = transformMatrix.TransformMatrixProjection(cube);
         drawCube(cube);
